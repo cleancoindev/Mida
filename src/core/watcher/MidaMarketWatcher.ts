@@ -45,7 +45,7 @@ export class MidaMarketWatcher {
         this.#watchedSymbols.set(symbol, directives);
     }
 
-    public async modifyDirectives (symbol: string, directives: MidaMarketWatcherDirectives): Promise<void> {
+    public async addDirectives (symbol: string, directives: MidaMarketWatcherDirectives): Promise<void> {
         const actualDirectives: MidaMarketWatcherDirectives | undefined = this.#watchedSymbols.get(symbol);
 
         if (!actualDirectives) {
@@ -61,17 +61,6 @@ export class MidaMarketWatcher {
 
     public async unwatch (symbol: string): Promise<void> {
         this.#watchedSymbols.delete(symbol);
-    }
-
-    async #configureSymbolTimeframe (symbol: string, timeframe: number): Promise<void> {
-        const periods: MidaSymbolPeriod[] = await this.#brokerAccount.getSymbolPeriods(symbol, timeframe);
-        const lastPeriod: MidaSymbolPeriod = periods[periods.length - 1];
-
-        if (!this.#lastPeriods.get(symbol)) {
-            this.#lastPeriods.set(symbol, new Map());
-        }
-
-        this.#lastPeriods.get(symbol)?.set(timeframe, lastPeriod);
     }
 
     public on (type: string): Promise<MidaEvent>
@@ -154,6 +143,17 @@ export class MidaMarketWatcher {
             this.#lastPeriods.get(symbol)?.set(timeframe, lastPeriod);
             this.#onPeriod(lastPeriod, previousPeriod);
         }
+    }
+
+    async #configureSymbolTimeframe (symbol: string, timeframe: number): Promise<void> {
+        const periods: MidaSymbolPeriod[] = await this.#brokerAccount.getSymbolPeriods(symbol, timeframe);
+        const lastPeriod: MidaSymbolPeriod = periods[periods.length - 1];
+
+        if (!this.#lastPeriods.get(symbol)) {
+            this.#lastPeriods.set(symbol, new Map());
+        }
+
+        this.#lastPeriods.get(symbol)?.set(timeframe, lastPeriod);
     }
 
     #configureListeners (): void {
