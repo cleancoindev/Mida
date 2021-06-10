@@ -1,4 +1,5 @@
 import { MidaBroker } from "#brokers/MidaBroker";
+import { MidaIndicator } from "#indicators/MidaIndicator";
 import { MidaPlugin } from "#plugins/MidaPlugin";
 import { MidaPluginActions } from "#plugins/MidaPluginActions";
 import { GenericObject } from "#utilities/GenericObject";
@@ -8,6 +9,10 @@ class Mida {
     static readonly #pluginActions: MidaPluginActions = {
         addBroker (broker: MidaBroker): void {
             MidaBroker.add(broker);
+        },
+
+        addIndicator (name: string, indicatorConstructor: typeof MidaIndicator) {
+            MidaIndicator.add(name, indicatorConstructor);
         },
     };
 

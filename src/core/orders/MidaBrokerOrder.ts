@@ -10,7 +10,7 @@ import { MidaSymbolTick } from "#ticks/MidaSymbolTick";
 import { MidaEmitter } from "#utilities/emitters/MidaEmitter";
 import { GenericObject } from "#utilities/GenericObject";
 
-/** Represents a broker order. */
+/** Represents a broker order, this single entity contains order, position and deals. */
 export class MidaBrokerOrder {
     readonly #id: string;
     readonly #brokerAccount: MidaBrokerAccount;
